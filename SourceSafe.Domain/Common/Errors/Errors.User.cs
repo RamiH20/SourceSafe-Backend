@@ -9,5 +9,7 @@ public static partial class Errors
         public static Error DuplicateEmail => Error.Conflict();
         public static Error InvalidCredentials => Error.Validation(
             description: "Invalid Credentials.");
+        public static Error NoUser => Error.NotFound(
+            description: "No User Found");
     }
 }

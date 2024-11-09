@@ -6,5 +6,5 @@ public class File
     public string Name { get; set; } = null!;
     public string Path { get; set; } = null!;
     public Group Group { get; set; } = null!;
-    public bool State {  get; set; }
+    public bool Reserved {  get; set; }
 }

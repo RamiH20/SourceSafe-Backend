@@ -22,7 +22,10 @@ public static class DenpendecyInjectcion
     {
         services.AddDbContext<SourceSafeDbContext>();
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        services.AddSingleton<IFileService, FileService>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IFileRepository, FileRepository>();
+        services.AddScoped<IGroupRepository, GroupRepository>();
         services.AddAuth(configuration);
         return services;
     }

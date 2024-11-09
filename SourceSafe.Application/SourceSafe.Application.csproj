@@ -16,4 +16,8 @@
     <ProjectReference Include="..\SourceSafe.Domain\SourceSafe.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\DTOs\" />
+  </ItemGroup>
+
 </Project>

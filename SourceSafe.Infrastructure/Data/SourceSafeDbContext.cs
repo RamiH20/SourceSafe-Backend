@@ -11,11 +11,11 @@ public class SourceSafeDbContext : DbContext
     }
     public DbSet<User> Users { get; set; }
     public DbSet<Group> Groups { get; set; }
-    public DbSet<GroupUsers> GroupUsers { get; set; }
+    public DbSet<GroupUser> GroupUsers { get; set; }
     public DbSet<Domain.Entities.File> Files { get; set; }
+    public DbSet<Backup> Backups { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<GroupUsers>().HasNoKey();
         base.OnModelCreating(modelBuilder);
     }
 }

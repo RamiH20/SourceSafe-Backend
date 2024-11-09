@@ -21,4 +21,8 @@ public class UserRepository(SourceSafeDbContext dbContext) : IUserRepository
     {
         return await _dbContext.Users.Where(x => x.Email == email).AnyAsync(x => x.Password == password);
     }
+    public Task<User?> GetUserById(int id)
+    {
+        return _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+    }
 }
