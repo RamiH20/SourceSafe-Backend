@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SourceSafe.Application.Services.UserServices.Commands.Register;
+using SourceSafe.Application.Services.UserServices.Queries.GetAllUsers;
 using SourceSafe.Application.Services.UserServices.Queries.Login;
 using SourceSafe.Contracts.User;
 
@@ -30,6 +32,15 @@ public class UserController(ISender mediator, IMapper mapper) : ApiController
         var result = await _mediator.Send(query);
         return result.Match(
             result => Ok(_mapper.Map<LoginResponse>(result)),
+            Problem);
+    }
+    [HttpGet]
+    [Route("GetAllUsers/{Id}")]
+    public async Task<IActionResult> GetAllUsers(int Id)
+    {
+        var result = await _mediator.Send(new GetAllUsersQuery(Id));
+        return result.Match(
+            result => Ok(_mapper.Map<GetAllUsersResponse>(result)),
             Problem);
     }
 }

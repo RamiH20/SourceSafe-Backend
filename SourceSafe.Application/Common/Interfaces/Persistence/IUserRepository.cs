@@ -1,4 +1,5 @@
-﻿using SourceSafe.Domain.Entities;
+﻿using SourceSafe.Application.Common.DTOs;
+using SourceSafe.Domain.Entities;
 
 namespace SourceSafe.Application.Common.Interfaces.Persistence;
 
@@ -8,4 +9,5 @@ public interface IUserRepository
     Task Add(User user);
     Task<bool> CheckPassword (string email, string password);
     Task<User?> GetUserById(int id);
+    Task<List<UserDTO>> GetAllUsers(int id);
 }

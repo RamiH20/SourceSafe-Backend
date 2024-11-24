@@ -35,7 +35,7 @@ public class JwtTokenGenerator(
             expires: _dateTimeProvider.Now.AddHours(_jwtSettings.ExpiryHours),
             claims: claims,
             signingCredentials: signingCredentials);
-
+        //refresh token
         return new JwtSecurityTokenHandler().WriteToken(sercurityToken);
     }
 }
