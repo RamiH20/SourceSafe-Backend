@@ -22,6 +22,7 @@ public class RegisterCommandHandler(IUserRepository userRepository) : IRequestHa
             Name = request.Name,
             Email = request.Email,
             Password = request.Password,
+            RoleId = 2
         };
         await _userRepository.Add(user);
         return new RegisterResult(

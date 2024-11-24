@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SourceSafe.Application.Common.DTOs;
 using SourceSafe.Application.Common.Interfaces.Persistence;
 using SourceSafe.Domain.Entities;
 using SourceSafe.Infrastructure.Data;
@@ -24,5 +25,16 @@ public class UserRepository(SourceSafeDbContext dbContext) : IUserRepository
     public Task<User?> GetUserById(int id)
     {
         return _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+    }
+    public async Task<List<UserDTO>> GetAllUsers(int id)
+    {
+        return await _dbContext.Users
+            .Where(x => x.Id != id && x.Role.Id != 1) 
+            .Select(x => new UserDTO
+        {
+            Id = x.Id,
+            Name = x.Name,
+            Email = x.Email,
+        }).ToListAsync();
     }
 }
