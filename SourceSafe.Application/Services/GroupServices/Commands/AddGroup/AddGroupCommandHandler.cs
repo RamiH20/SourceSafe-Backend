@@ -26,7 +26,7 @@ public class AddGroupCommandHandler(
         var group = new Group()
         {
             Name = request.GroupName,
-            Admin = admin
+            Admin = admin!
         };
         await _groupRepository.AddGroup(group);
         List<User> users = [];
