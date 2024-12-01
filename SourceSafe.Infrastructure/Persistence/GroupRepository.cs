@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SourceSafe.Application.Common.DTOs;
 using SourceSafe.Application.Common.Interfaces.Persistence;
 using SourceSafe.Domain.Entities;
 using SourceSafe.Infrastructure.Data;
@@ -21,5 +22,29 @@ public class GroupRepository(SourceSafeDbContext dbContext) : IGroupRepository
     {
         await _dbContext.GroupUsers.AddRangeAsync(groupUsers);
         await _dbContext.SaveChangesAsync();
+    }
+    public async Task<List<UserGroupsDTO>> GetUserGroups(int UserId)
+    {
+        List<UserGroupsDTO> userGroups = [];
+        var groups = await _dbContext.GroupUsers
+            .Where(x => x.User.Id == UserId)
+            .Include(x => x.Group.Admin)
+            .Select(x => x.Group)
+            .ToListAsync();
+        foreach(var group in groups)
+        {
+            var usersCount = await _dbContext.GroupUsers
+                .Where(x => x.Group.Id == group.Id).CountAsync();
+            var filesCount = await _dbContext.Files.
+                Where(x => x.Group.Id == group.Id).CountAsync();
+            userGroups.Add(new UserGroupsDTO
+            {
+                GroupName = group.Name,
+                GroupAdminName = group.Admin.Name,
+                UsersCount = usersCount,
+                FilesCount = filesCount
+            });
+        }
+        return userGroups;
     }
 }

@@ -26,15 +26,46 @@ public class UserRepository(SourceSafeDbContext dbContext) : IUserRepository
     {
         return _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
     }
-    public async Task<List<UserDTO>> GetAllUsers(int id)
+    public async Task<List<UserDTO>> GetAllUsers(int id, string Search)
+    {
+        if(Search is null)
+        {
+            return await _dbContext.Users
+            .Where(x => x.Id != id && x.Role.Id != 1)
+            .Select(x => new UserDTO
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Email = x.Email,
+            }).ToListAsync();
+        }
+        else
+        {
+            return await _dbContext.Users
+            .Where(x => x.Id != id && x.Role.Id != 1
+            && (x.Name.Contains(Search)|| x.Email.Contains(Search)))
+            .Select(x => new UserDTO
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Email = x.Email,
+            }).ToListAsync();
+        }
+    }
+    public async Task AddRefreshToken(User user, RefreshToken refreshToken)
+    {
+        user.RefreshTokens.Add(refreshToken);
+        await _dbContext.SaveChangesAsync();
+    }
+    public async Task<User?> GetUserByToken(string token)
     {
         return await _dbContext.Users
-            .Where(x => x.Id != id && x.Role.Id != 1) 
-            .Select(x => new UserDTO
-        {
-            Id = x.Id,
-            Name = x.Name,
-            Email = x.Email,
-        }).ToListAsync();
+            .SingleOrDefaultAsync(x => x.RefreshTokens
+            .Any(t => t.Token == token));
+    }
+    public async Task<string?> GetUserRole(int id)
+    {
+        return await _dbContext.Roles.Where(x => x.Id == id)
+            .Select(x => x.Name).FirstOrDefaultAsync();
     }
 }

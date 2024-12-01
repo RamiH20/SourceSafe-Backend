@@ -11,5 +11,7 @@ public static partial class Errors
             description: "Invalid Credentials.");
         public static Error NoUser => Error.NotFound(
             description: "No User Found");
+        public static Error InactiveToken => Error.Forbidden(
+            description: "Inactive Token");
     }
 }

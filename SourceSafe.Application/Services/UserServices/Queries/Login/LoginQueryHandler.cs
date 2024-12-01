@@ -1,9 +1,11 @@
 ﻿using ErrorOr;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using SourceSafe.Application.Common.Interfaces.Authentication;
 using SourceSafe.Application.Common.Interfaces.Persistence;
 using SourceSafe.Domain.Common.Errors;
 using SourceSafe.Domain.Entities;
+using System.Net;
 
 namespace SourceSafe.Application.Services.UserServices.Queries.Login;
 
@@ -28,7 +30,25 @@ public class LoginQueryHandler(
             return Errors.User.InvalidCredentials;
         }
         // create JWT token
-        var token = _jwtTokenGenerator.GenerateToken(user);
-        return new LoginResult(token);
+        var token = await _jwtTokenGenerator.GenerateToken(user);
+        if ( user.RefreshTokens.Any(t => t.IsActive))
+        {
+            var activeRefreshToken = user.RefreshTokens.FirstOrDefault(t => t.IsActive);
+            return new LoginResult(
+                (HttpStatusCode)StatusCodes.Status200OK,
+                token,
+                activeRefreshToken!.Token,
+                activeRefreshToken.ExpiresOn);
+        }
+        else
+        {
+            var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();
+            await _userRepository.AddRefreshToken(user, refreshToken);
+            return new LoginResult(
+                (HttpStatusCode)StatusCodes.Status200OK,
+                token,
+                refreshToken!.Token,
+                refreshToken.ExpiresOn);
+        }
     }
 }

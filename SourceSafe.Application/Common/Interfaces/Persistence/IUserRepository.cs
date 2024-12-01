@@ -9,5 +9,8 @@ public interface IUserRepository
     Task Add(User user);
     Task<bool> CheckPassword (string email, string password);
     Task<User?> GetUserById(int id);
-    Task<List<UserDTO>> GetAllUsers(int id);
+    Task<List<UserDTO>> GetAllUsers(int id, string Search);
+    Task AddRefreshToken(User user, RefreshToken refreshToken);
+    Task<User?> GetUserByToken(string token);
+    Task<string?> GetUserRole(int id);
 }

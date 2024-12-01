@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using SourceSafe.Application.Services.UserServices.Commands.RefreshToken;
 using SourceSafe.Application.Services.UserServices.Commands.Register;
 using SourceSafe.Application.Services.UserServices.Queries.GetAllUsers;
 using SourceSafe.Application.Services.UserServices.Queries.Login;
@@ -14,8 +15,10 @@ public class UserMappings : Profile
         CreateMap<RegisterResult, RegisterResponse>();
         CreateMap<LoginRequest, LoginQuery>();
         CreateMap<LoginResult, LoginResponse>();
+        CreateMap<GetAllUsersRequest, GetAllUsersQuery>();
         CreateMap<GetAllUsersResult, GetAllUsersResponse>()
             .ForMember(dest => dest.Items, 
             opt => opt.MapFrom(src => src.Users));
+        CreateMap<RefreshTokenResult, LoginResponse>();
     }
 }

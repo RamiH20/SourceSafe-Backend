@@ -13,7 +13,8 @@ public class GetAllUsersQueryHandler(IUserRepository userRepository)
     private readonly IUserRepository _userRepository = userRepository;
     public async Task<ErrorOr<GetAllUsersResult>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
     {
-        var users = await _userRepository.GetAllUsers(request.Id);
+        var users = await _userRepository.GetAllUsers(request.Id,
+            request.Search);
         if (users == null)
         {
             return Errors.User.NoUser;

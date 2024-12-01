@@ -9,14 +9,18 @@ public class SourceSafeDbContext : DbContext
     {
         optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=SourceSafe;Trusted_Connection=true;TrustServerCertificate=true;");
     }
-    public DbSet<User> Users { get; set; }
-    public DbSet<Role> Roles { get; set; }
-    public DbSet<Group> Groups { get; set; }
-    public DbSet<GroupUser> GroupUsers { get; set; }
-    public DbSet<Domain.Entities.File> Files { get; set; }
-    public DbSet<Backup> Backups { get; set; }
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<Role> Roles { get; set; } = null!;
+    public DbSet<Group> Groups { get; set; } = null!;
+    public DbSet<GroupUser> GroupUsers { get; set; } = null!;
+    public DbSet<Domain.Entities.File> Files { get; set; } = null!;
+    public DbSet<Backup> Backups { get; set; } = null!;
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.Entity<Group>()
+            .HasOne(g => g.Admin)
+            .WithMany()
+            .OnDelete(DeleteBehavior.Restrict);
         var adminRole = new Role()
         {
             Id = 1,

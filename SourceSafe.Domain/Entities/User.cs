@@ -8,4 +8,5 @@ public class User
     public string Password { get; set; } = null!;
     public int RoleId { get; set; }
     public Role Role { get; set; } = null!;
+    public List<RefreshToken> RefreshTokens { get; set; } = [];
 }

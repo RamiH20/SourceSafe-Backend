@@ -1,3 +1,9 @@
-﻿namespace SourceSafe.Application.Services.UserServices.Queries.Login;
+﻿using System.Net;
 
-public record LoginResult(string Token);
+namespace SourceSafe.Application.Services.UserServices.Queries.Login;
+
+public record LoginResult(
+    HttpStatusCode Status,
+    string Token,
+    string RefreshToken,
+    DateTime RefreshTokenExpiration);
