@@ -18,4 +18,8 @@
     <ProjectReference Include="..\SourceSafe.Infrastructure\SourceSafe.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Uploads\" />
+  </ItemGroup>
+
 </Project>
