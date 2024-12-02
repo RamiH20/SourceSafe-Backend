@@ -23,9 +23,9 @@ public class GroupRepository(SourceSafeDbContext dbContext) : IGroupRepository
         await _dbContext.GroupUsers.AddRangeAsync(groupUsers);
         await _dbContext.SaveChangesAsync();
     }
-    public async Task<List<UserGroupsDTO>> GetUserGroups(int UserId)
+    public async Task<List<UserGroupDTO>> GetUserGroups(int UserId)
     {
-        List<UserGroupsDTO> userGroups = [];
+        List<UserGroupDTO> userGroups = [];
         var groups = await _dbContext.GroupUsers
             .Where(x => x.User.Id == UserId)
             .Include(x => x.Group.Admin)
@@ -37,7 +37,7 @@ public class GroupRepository(SourceSafeDbContext dbContext) : IGroupRepository
                 .Where(x => x.Group.Id == group.Id).CountAsync();
             var filesCount = await _dbContext.Files.
                 Where(x => x.Group.Id == group.Id).CountAsync();
-            userGroups.Add(new UserGroupsDTO
+            userGroups.Add(new UserGroupDTO
             {
                 GroupName = group.Name,
                 GroupAdminName = group.Admin.Name,

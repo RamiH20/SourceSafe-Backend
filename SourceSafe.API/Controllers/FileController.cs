@@ -5,7 +5,9 @@ using SourceSafe.Application.Common.Interfaces.Services;
 using SourceSafe.Application.Services.FileSerices.Commands.AddFile;
 using SourceSafe.Application.Services.FileSerices.Commands.Check_in;
 using SourceSafe.Application.Services.FileSerices.Commands.Check_out;
+using SourceSafe.Application.Services.FileSerices.Queries.GetGroupFiles;
 using SourceSafe.Contracts.File;
+using SourceSafe.Contracts.Group;
 
 namespace SourceSafe.API.Controllers;
 [Route("File")]
@@ -64,6 +66,15 @@ public class FileController(
         var result = await _mediator.Send(command);
         return result.Match(
             result => Ok(_mapper.Map<Check_outResponse>(result)),
+            Problem);
+    }
+    [HttpGet]
+    [Route("GetGroupFiles")]
+    public async Task<IActionResult> GetGroupFiles(int GroupId)
+    {
+        var result = await _mediator.Send(new GetGroupFilesQuery(GroupId));
+        return result.Match(
+            result => Ok(_mapper.Map<GetUserGroupsResponse>(result)),
             Problem);
     }
 }

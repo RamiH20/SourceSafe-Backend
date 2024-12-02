@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SourceSafe.Application.Common.DTOs;
 using SourceSafe.Application.Common.Interfaces.Persistence;
 using SourceSafe.Domain.Entities;
 using SourceSafe.Infrastructure.Data;
@@ -82,5 +83,34 @@ public class FileRepository(SourceSafeDbContext dbContext) : IFileRepository
             file.Path = newPath;
             await _dbContext.SaveChangesAsync();
         }
+    }
+    public async Task<List<GroupFileDTO>> GetGroupFiles(int groupId)
+    {
+        List<GroupFileDTO> files = [];
+        List<int> fileIds = await _dbContext.Files
+            .Where(x => x.Group.Id == groupId)
+            .Select(x => x.Id)
+            .ToListAsync();
+        foreach (int fileId in fileIds)
+        { 
+            var file = await _dbContext.Files
+                .FirstOrDefaultAsync(x => x.Id == fileId);
+            var lastUpdated = await _dbContext.Backups
+                    .Include(x => x.File)
+                    .Where(x => x.File.Id == fileId)
+                    .Select(x => x.Date)
+                    .OrderBy(x => x.Date)
+                    .LastOrDefaultAsync();
+            var groupFileDTO = new GroupFileDTO
+            {
+                FileId = fileId,
+                FileName = file!.Name,
+                FilePath = file.Path,
+                LastUpdated = lastUpdated,
+                IsReserved = file.Reserved
+            };
+            files.Add(groupFileDTO);
+        }
+        return files;
     }
 }

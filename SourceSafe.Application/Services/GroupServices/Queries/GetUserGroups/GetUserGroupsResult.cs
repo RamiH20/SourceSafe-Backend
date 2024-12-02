@@ -5,4 +5,4 @@ namespace SourceSafe.Application.Services.GroupServices.Queries.GetUserGroups;
 
 public record GetUserGroupsResult(
     HttpStatusCode Status,
-    List<UserGroupsDTO> Items);
+    List<UserGroupDTO> Items);
