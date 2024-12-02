@@ -12,5 +12,7 @@ public static partial class Errors
             description:"Not available at the moment");
         public static Error FileNotFound => Error.NotFound(
             description:"No File");
+        public static Error GroupWithNoFiles => Error.NotFound(
+            description: "There is no files in this group yet");
     }
 }

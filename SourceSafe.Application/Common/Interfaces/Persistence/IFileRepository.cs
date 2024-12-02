@@ -1,4 +1,5 @@
-﻿using SourceSafe.Domain.Entities;
+﻿using SourceSafe.Application.Common.DTOs;
+using SourceSafe.Domain.Entities;
 
 namespace SourceSafe.Application.Common.Interfaces.Persistence;
 
@@ -13,4 +14,5 @@ public interface IFileRepository
     Task AddBackup(Backup backup);
     Task Check_outFile(int fileId);
     Task ReplaceFilePath(int fileId, string newPath);
+    Task<List<GroupFileDTO>> GetGroupFiles(int groupId);
 }

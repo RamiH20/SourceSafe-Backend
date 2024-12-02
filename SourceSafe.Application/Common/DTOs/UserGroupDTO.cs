@@ -1,6 +1,6 @@
 ﻿namespace SourceSafe.Application.Common.DTOs;
 
-public class UserGroupsDTO
+public class UserGroupDTO
 {
     public string GroupName { get; set; } = null!;
     public string GroupAdminName { get; set; } = null!;
