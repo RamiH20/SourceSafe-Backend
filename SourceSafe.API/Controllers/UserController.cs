@@ -31,7 +31,7 @@ public class UserController(ISender mediator, IMapper mapper) : ApiController
     {
         var query = _mapper.Map<LoginQuery>(request);
         var result = await _mediator.Send(query);
-        if(!string.IsNullOrEmpty(result.Value.RefreshToken))
+        if(!result.IsError && !string.IsNullOrEmpty(result.Value.RefreshToken))
         {
             SetRefreshTokenInCookie(result.Value.RefreshToken,result.Value.RefreshTokenExpiration);
         }
