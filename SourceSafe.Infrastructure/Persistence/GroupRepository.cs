@@ -39,6 +39,7 @@ public class GroupRepository(SourceSafeDbContext dbContext) : IGroupRepository
                 Where(x => x.Group.Id == group.Id).CountAsync();
             userGroups.Add(new UserGroupDTO
             {
+                GroupId = group.Id,
                 GroupName = group.Name,
                 GroupAdminName = group.Admin.Name,
                 UsersCount = usersCount,
