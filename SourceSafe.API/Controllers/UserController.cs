@@ -31,16 +31,17 @@ public class UserController(ISender mediator, IMapper mapper) : ApiController
     {
         var query = _mapper.Map<LoginQuery>(request);
         var result = await _mediator.Send(query);
-        if(!result.IsError && !string.IsNullOrEmpty(result.Value.RefreshToken))
+        /*if(!result.IsError && !string.IsNullOrEmpty(result.Value.RefreshToken))
         {
             SetRefreshTokenInCookie(result.Value.RefreshToken,result.Value.RefreshTokenExpiration);
-        }
+        }*/
         return result.Match(
             result => Ok(_mapper.Map<LoginResponse>(result)),
             Problem);
     }
     [HttpGet]
     [Route("GetAllUsers")]
+    [Authorize]
     //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAllUsers([FromQuery]GetAllUsersRequest request)
     {
@@ -53,20 +54,15 @@ public class UserController(ISender mediator, IMapper mapper) : ApiController
     }
     [HttpGet]
     [Route("RefreshToken")]
-    public async Task<IActionResult> RefreshToken()
+    public async Task<IActionResult> RefreshToken([FromQuery] string refreshToken)
     {
-        var refreshToken = Request.Cookies["refreshToken"];
-        if(string.IsNullOrEmpty(refreshToken))
-        {
-            return BadRequest();
-        }
         var result = await _mediator.Send(new RefreshTokenCommand(refreshToken));
-        SetRefreshTokenInCookie(result.Value.RefreshToken, result.Value.RefreshTokenExpiration);    
+        //SetRefreshTokenInCookie(result.Value.RefreshToken, result.Value.RefreshTokenExpiration);    
         return result.Match(
             result => Ok(_mapper.Map<LoginResponse>(result)),
             Problem);
     }
-    private void SetRefreshTokenInCookie(string refreshToken, DateTime expires)
+    /*private void SetRefreshTokenInCookie(string refreshToken, DateTime expires)
     {
         var cookieOptions = new CookieOptions
         {
@@ -74,5 +70,5 @@ public class UserController(ISender mediator, IMapper mapper) : ApiController
             Expires = expires.ToLocalTime()
         };
         Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
-    }
+    }*/
 }
