@@ -62,7 +62,8 @@ public class FileController(
         var command = new Check_outCommand(
             request.UserId,
             request.FileId,
-            file);
+            file,
+            request.Edited);
         var result = await _mediator.Send(command);
         return result.Match(
             result => Ok(_mapper.Map<Check_outResponse>(result)),

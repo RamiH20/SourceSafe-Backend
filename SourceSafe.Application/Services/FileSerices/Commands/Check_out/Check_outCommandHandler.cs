@@ -20,26 +20,29 @@ public class Check_outCommandHandler(
     private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
     public async Task<ErrorOr<Check_outResult>> Handle(Check_outCommand request, CancellationToken cancellationToken)
     {
+        if (request.Edited is true)
+        {
+            await _fileRepository.ReplaceFilePath(request.FileId, request.Path);
+            var file = _fileRepository.GetFile(request.FileId).Result;
+            if (file is null)
+            {
+                return Errors.File.FileNotFound;
+            }
+            var user = _userRepository.GetUserById(request.UserId).Result;
+            if (user is null)
+            {
+                return Errors.User.NoUser;
+            }
+            var backup = new Backup()
+            {
+                File = file,
+                BackupPath = request.Path,
+                User = user,
+                Date = _dateTimeProvider.Now
+            };
+            await _fileRepository.AddBackup(backup);
+        }
         await _fileRepository.Check_outFile(request.FileId);
-        await _fileRepository.ReplaceFilePath(request.FileId, request.Path);
-        var file = _fileRepository.GetFile(request.FileId).Result;
-        if(file is null)
-        {
-            return Errors.File.FileNotFound;
-        }
-        var user = _userRepository.GetUserById(request.UserId).Result;
-        if(user is null)
-        {
-            return Errors.User.NoUser;
-        }
-        var backup = new Backup()
-        {
-            File = file,
-            BackupPath = request.Path,
-            User = user,
-            Date = _dateTimeProvider.Now
-        };
-        await _fileRepository.AddBackup(backup);
         return new Check_outResult(
             (HttpStatusCode)StatusCodes.Status200OK,
             "Checked_out successfully");
