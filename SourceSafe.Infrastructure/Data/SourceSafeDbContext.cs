@@ -15,6 +15,7 @@ public class SourceSafeDbContext : DbContext
     public DbSet<GroupUser> GroupUsers { get; set; } = null!;
     public DbSet<Domain.Entities.File> Files { get; set; } = null!;
     public DbSet<Backup> Backups { get; set; } = null!;
+    public DbSet<Report> Reports { get; set; } = null!;
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<Group>()

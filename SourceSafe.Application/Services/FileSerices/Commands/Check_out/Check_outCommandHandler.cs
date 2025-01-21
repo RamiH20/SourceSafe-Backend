@@ -12,11 +12,13 @@ namespace SourceSafe.Application.Services.FileSerices.Commands.Check_out;
 public class Check_outCommandHandler(
     IFileRepository fileRepository,
     IUserRepository userRepository,
+    IReportRepository reportRepository,
     IDateTimeProvider dateTimeProvider):
     IRequestHandler<Check_outCommand, ErrorOr<Check_outResult>>
 {
     private readonly IFileRepository _fileRepository = fileRepository;
     private readonly IUserRepository _userRepository = userRepository;
+    private readonly IReportRepository _reportRepository = reportRepository;
     private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
     public async Task<ErrorOr<Check_outResult>> Handle(Check_outCommand request, CancellationToken cancellationToken)
     {
@@ -43,6 +45,11 @@ public class Check_outCommandHandler(
             await _fileRepository.AddBackup(backup);
         }
         await _fileRepository.Check_outFile(request.FileId);
+        await _reportRepository
+            .UpdateReport(request.FileId,
+            request.UserId,
+            _dateTimeProvider.Now,
+            request.Edited);
         return new Check_outResult(
             (HttpStatusCode)StatusCodes.Status200OK,
             "Checked_out successfully");
