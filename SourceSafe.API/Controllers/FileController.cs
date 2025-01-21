@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SourceSafe.Application.Common.Interfaces.Services;
 using SourceSafe.Application.Services.FileSerices.Commands.AddFile;
 using SourceSafe.Application.Services.FileSerices.Commands.Check_in;
 using SourceSafe.Application.Services.FileSerices.Commands.Check_out;
+using SourceSafe.Application.Services.FileSerices.Commands.DeleteFile;
 using SourceSafe.Application.Services.FileSerices.Queries.GetGroupFiles;
 using SourceSafe.Contracts.File;
 using SourceSafe.Contracts.Group;
@@ -76,6 +78,15 @@ public class FileController(
         var result = await _mediator.Send(new GetGroupFilesQuery(GroupId));
         return result.Match(
             result => Ok(_mapper.Map<GetUserGroupsResponse>(result)),
+            Problem);
+    }
+    [HttpPost]
+    [Route("DeleteFile")]
+    public async Task<IActionResult> DeleteFile(int FileId)
+    {
+        var result = await _mediator.Send(new DeleteFileCommand(FileId));
+        return result.Match(
+            result => Ok(_mapper.Map<Check_inResponse>(result)),
             Problem);
     }
 }

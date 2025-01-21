@@ -23,11 +23,11 @@ public class GroupRepository(SourceSafeDbContext dbContext) : IGroupRepository
         await _dbContext.GroupUsers.AddRangeAsync(groupUsers);
         await _dbContext.SaveChangesAsync();
     }
-    public async Task<List<UserGroupDTO>> GetUserGroups(int UserId)
+    public async Task<List<UserGroupDTO>> GetUserGroups(int userId)
     {
         List<UserGroupDTO> userGroups = [];
         var groups = await _dbContext.GroupUsers
-            .Where(x => x.User.Id == UserId)
+            .Where(x => x.User.Id == userId)
             .Include(x => x.Group.Admin)
             .Select(x => x.Group)
             .ToListAsync();
@@ -47,5 +47,11 @@ public class GroupRepository(SourceSafeDbContext dbContext) : IGroupRepository
             });
         }
         return userGroups;
+    }
+    public async Task<List<User>> GetGroupUsers(int groupId)
+    {
+        return await _dbContext.GroupUsers
+            .Where(x => x.Group.Id == groupId)
+            .Select(x => x.User).ToListAsync();
     }
 }

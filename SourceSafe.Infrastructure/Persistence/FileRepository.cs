@@ -113,4 +113,9 @@ public class FileRepository(SourceSafeDbContext dbContext) : IFileRepository
         }
         return files;
     }
+    public async Task DeleteFile(Domain.Entities.File file)
+    {
+        _dbContext.Files.Remove(file);
+        await _dbContext.SaveChangesAsync();
+    }
 }

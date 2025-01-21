@@ -15,4 +15,5 @@ public interface IFileRepository
     Task Check_outFile(int fileId);
     Task ReplaceFilePath(int fileId, string newPath);
     Task<List<GroupFileDTO>> GetGroupFiles(int groupId);
+    Task DeleteFile(Domain.Entities.File file);
 }

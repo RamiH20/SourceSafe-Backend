@@ -26,6 +26,7 @@ public static class DenpendecyInjectcion
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IFileRepository, FileRepository>();
         services.AddScoped<IGroupRepository, GroupRepository>();
+        services.AddScoped<IReportRepository, ReportRepository>();
         services.AddAuth(configuration);
         return services;
     }

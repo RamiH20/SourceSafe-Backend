@@ -1,3 +1,4 @@
+using Microsoft.Extensions.FileProviders;
 using SourceSafe.API;
 using SourceSafe.Application;
 using SourceSafe.Infrastructure;
@@ -18,7 +19,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Uploads")),
+    RequestPath = new PathString("/Uploads")
+});
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
