@@ -35,7 +35,7 @@ public class ReportRepository(SourceSafeDbContext dbContext):
             Where(x => x.File.Id == fileId).
             Select(x => new FileReportDTO
             {
-                UserId = x.User.Id,
+                UserName = x.User.Name,
                 Checked_inAt = x.Checked_inAt,
                 Checked_outAt = x.Checked_outAt
             }).OrderByDescending(x => x.Checked_inAt).ToListAsync();
@@ -46,23 +46,23 @@ public class ReportRepository(SourceSafeDbContext dbContext):
             .Where(x => x.File.Group.Id == groupId && x.User.Id == userId)
             .Select(x => new
             {
-                UserId = x.User.Id,
-                FileId = x.File.Id,
+                UserName = x.User.Name,
+                FileName = x.File.Name,
                 x.Checked_inAt,
                 x.Checked_outAt
             })
             .ToListAsync();
 
         var groupedReports = reports
-            .GroupBy(r => r.UserId)
+            .GroupBy(r => r.UserName)
             .Select(g => new UserReportDTO
             {
-                UserId = g.Key,
+                UserName = g.Key,
                 Files = g
                     .OrderByDescending(r => r.Checked_inAt)
                     .Select(r => new FilesUserReportDTO
                     {
-                        FileId = r.FileId,
+                        FileName = r.FileName,
                         Checked_inAt = r.Checked_inAt,
                         Checked_outAt = r.Checked_outAt
                     })

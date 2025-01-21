@@ -2,7 +2,7 @@
 
 public class FilesUserReportDTO
 {
-    public int FileId { get; set; }
+    public string FileName { get; set; } = null!;
     public DateTime Checked_inAt { get; set; }
     public DateTime? Checked_outAt { get; set; }
 }
