@@ -118,4 +118,14 @@ public class FileRepository(SourceSafeDbContext dbContext) : IFileRepository
         _dbContext.Files.Remove(file);
         await _dbContext.SaveChangesAsync();
     }
+    public async Task<List<FileCopiesDTO>> GetFileCopies(int fileId)
+    {
+        return await _dbContext.Backups
+            .Where(x => x.File.Id == fileId)
+            .Select(x => new FileCopiesDTO
+            {
+                CopyPath = x.BackupPath,
+                Date = x.Date,
+            }).OrderByDescending(x => x.Date).ToListAsync();
+    }
 }

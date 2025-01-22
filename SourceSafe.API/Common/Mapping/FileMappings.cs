@@ -3,6 +3,7 @@ using SourceSafe.Application.Services.FileSerices.Commands.AddFile;
 using SourceSafe.Application.Services.FileSerices.Commands.Check_in;
 using SourceSafe.Application.Services.FileSerices.Commands.Check_out;
 using SourceSafe.Application.Services.FileSerices.Commands.DeleteFile;
+using SourceSafe.Application.Services.FileSerices.Queries.GetFileCopies;
 using SourceSafe.Application.Services.FileSerices.Queries.GetGroupFiles;
 using SourceSafe.Application.Services.ReportServices.Queries.GetFileReport;
 using SourceSafe.Application.Services.ReportServices.Queries.GetUsersReport;
@@ -29,6 +30,9 @@ public class FileMappings : Profile
             opt => opt.MapFrom(src => src.Items));
         CreateMap<GetUsersReportRequest, GetUsersReportQuery>();
         CreateMap<GetUsersReportResult, GetUserGroupsResponse>()
+            .ForMember(dest => dest.Items,
+            opt => opt.MapFrom(src => src.Items));
+        CreateMap<GetFileCopiesResult, GetUserGroupsResponse>()
             .ForMember(dest => dest.Items,
             opt => opt.MapFrom(src => src.Items));
     }

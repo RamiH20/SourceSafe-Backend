@@ -10,4 +10,6 @@ public interface IGroupRepository
     Task AddGroupUsers(List<GroupUser> groupUsers);
     Task<List<UserGroupDTO>> GetUserGroups(int UserId);
     Task<List<User>> GetGroupUsers(int groupId);
+    Task<Group?> GetGroupById(int groupId);
+    Task AddGroupUser(GroupUser groupUser);
 }

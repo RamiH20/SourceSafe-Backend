@@ -7,6 +7,7 @@ using SourceSafe.Application.Services.FileSerices.Commands.AddFile;
 using SourceSafe.Application.Services.FileSerices.Commands.Check_in;
 using SourceSafe.Application.Services.FileSerices.Commands.Check_out;
 using SourceSafe.Application.Services.FileSerices.Commands.DeleteFile;
+using SourceSafe.Application.Services.FileSerices.Queries.GetFileCopies;
 using SourceSafe.Application.Services.FileSerices.Queries.GetGroupFiles;
 using SourceSafe.Contracts.File;
 using SourceSafe.Contracts.Group;
@@ -87,6 +88,15 @@ public class FileController(
         var result = await _mediator.Send(new DeleteFileCommand(FileId));
         return result.Match(
             result => Ok(_mapper.Map<Check_inResponse>(result)),
+            Problem);
+    }
+    [HttpGet]
+    [Route("GetFileCopies")]
+    public async Task<IActionResult> GetFileCopies(int FileId)
+    {
+        var result = await _mediator.Send(new GetFileCopiesQuery(FileId));
+        return result.Match(
+            result => Ok(_mapper.Map<GetUserGroupsResponse>(result)),
             Problem);
     }
 }

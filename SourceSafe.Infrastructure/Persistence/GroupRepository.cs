@@ -3,6 +3,7 @@ using SourceSafe.Application.Common.DTOs;
 using SourceSafe.Application.Common.Interfaces.Persistence;
 using SourceSafe.Domain.Entities;
 using SourceSafe.Infrastructure.Data;
+using System.Runtime.InteropServices;
 
 namespace SourceSafe.Infrastructure.Persistence;
 
@@ -53,5 +54,14 @@ public class GroupRepository(SourceSafeDbContext dbContext) : IGroupRepository
         return await _dbContext.GroupUsers
             .Where(x => x.Group.Id == groupId)
             .Select(x => x.User).ToListAsync();
+    }
+    public async Task<Group?> GetGroupById(int id)
+    {
+        return await _dbContext.Groups.FirstOrDefaultAsync(x => x.Id == id);
+    }
+    public async Task AddGroupUser(GroupUser groupUser)
+    {
+        await _dbContext.GroupUsers.AddAsync(groupUser);
+        await _dbContext.SaveChangesAsync();
     }
 }
