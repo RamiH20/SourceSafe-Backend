@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SourceSafe.Application.Services.GroupServices.Commands.AddGroup;
+using SourceSafe.Application.Services.GroupServices.Commands.AddUserToGroup;
 using SourceSafe.Application.Services.GroupServices.Queries.GetUserGroups;
 using SourceSafe.Contracts.Group;
 
@@ -31,6 +32,16 @@ public class GroupController(
         var result = await _mediator.Send(new GetUserGroupsQuery(UserId));
         return result.Match(
             result => Ok(_mapper.Map<GetUserGroupsResponse>(result)),
+            Problem);
+    }
+    [HttpPost]
+    [Route("AddUserToGroup")]
+    public async Task<IActionResult> AddUserToGroup([FromQuery] AddUserToGroupRequest request)
+    {
+        var command = _mapper.Map<AddUserToGroupCommand>(request);
+        var result = await _mediator.Send(command);
+        return result.Match(
+            result => Ok(_mapper.Map<AddGroupResponse>(result)),
             Problem);
     }
 }
